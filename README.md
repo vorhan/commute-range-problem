@@ -28,28 +28,33 @@ For searching shortest paths between cities was used modified Dijkstra Algorithm
 
 #### 4.1. Original Dijkstra Algorithm description:
 
-1. Build graph in memory.  Mark each vertex as unvisited.
-2. Set initial(start) node. 
-3. Create list of passed nodes. Set initial node as passed.
-4. Create heap as supporting data structures. Add all nodes to heap. Assign a tentative distance value for every node (0 for initial, positive infinity for others).
-5. Take node with min distance and remove it from heap. Check if destination to this node less than timeLimit. add it to result list if yes. Add it to passed list. Take all its neighbours from the graph and count time destination for each of them. Update heap (update time destination for nodes if it less than value in heap).
-6. Do point 5 until heap is not empty.
+1. Build graph in memory.
+2. Create list of passed nodes. Set initial(start) node as passed.
+3. Create heap as supporting data structures. Add start node to heap (with time distance as 0).
+4. Take node with min time distance and remove it from heap (current node). Add it to passed list. 
+5. Take all neighbours of current node from the graph and count time destination for each of them that are not passed.
+6. For each node count new destination time. Add it to heap or update it in heap if new destination less than old destination stored in heap and time limit. Add these nodes to result list.
+7. Do points 4-6 until heap is not empty.
 
 For memory savings, in modified Dijkstra Algorithm graph isn't building in memory, but all neighbours takes directly from database.
 
-#### 4.1. Modified Dijkstra Algorithm description:
+#### 4.2. Modified Dijkstra Algorithm description:
 
-1. Added start city to heap(used TreeSet). Add its id to list of passed cities.
-2. Take closest city (graph vertex) from heap (current city). Get from database all neighbour cities(that wasn't passed before) for this city (graph edges) that are less than remaining time limit (entered time limit minus time limit in current city). Add these city IDs to reacheable city IDs list.
-3. For each city count new destination time. Add it to heap or update it in heap if new destination less than old destination stored in heap.
-4. Do points 2-3 until heap is not empty.
+1. Create heap as supporting data structures. Add start node to heap (with time distance as 0).
+2. Take node with min time distance and remove it from heap (current node). Add it to passed list. 
+3. Get from database all neighbours of current node(that are not in passed list and which time_distance is no more then remaining time distance(entered time limit minus time distance to current node).
+4. For each node count new destination time. Add it to heap or update it in heap if new destination less than old destination stored in heap. Add these nodes to result list.
+5. Do points 2-4 until heap is not empty.
 
 Asymptotic upper bound of the algorithm is O(m log(n)) where n –number of nodes and m – number of edges.
 
 
 ## 5.	ARCHITECTURE
 Commute range problem application designed as REST API application.
-Technologies: java 8, Spring Boot 2.0.5, H2 database.
+Technologies: java 8, maven, Spring Boot 2.0.5, H2 database.
+To run application go to project directory, than in command line call "mvn spring-boot:run"
+To run unit tests go to project directory, than in command line call "mvn test"
+Data: used immutable dataset that inserts when application runs (see data.sql file)
 
 API: http://localhost:8080/reachable-cities/{cityId}?timeLimit={timeLimit}
 where cityId - is id of start city, timeLimit - limit of time destination to cities.
