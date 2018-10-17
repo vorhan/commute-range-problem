@@ -21,7 +21,7 @@ For searching shortest paths between cities was used modified Dijkstra Algorithm
 |id|	INT(11)|	Unique route index|
 |city_id_from|	INT(11)|	city id route starts|
 |city_id_to|	INT(11)|city id route ends|
-|time_distance|	Double|	time distance between cities city_id_from and city_id_to|
+|time_distance|	Double|	time distance between cities city_id_from and city_id_to (in minutes)|
 
 
 ### 4.	Algorithm description
@@ -57,7 +57,7 @@ To run unit tests go to project directory, than in command line call "mvn test"
 Data: used immutable dataset that inserts when application runs (see data.sql file)
 
 API: http://localhost:8080/reachable-cities/{cityId}?timeLimit={timeLimit}
-where cityId - is id of start city, timeLimit - limit of time destination to cities.
+where cityId - is id of start city, timeLimit - limit of time destination to cities(in minutes).
 example: 
 http://localhost:8080/reachable-cities/9?timeLimit=30
 example response:
