@@ -2,7 +2,7 @@ package com.test.commuterangeproblem.service.searchcities;
 
 import com.test.commuterangeproblem.model.CityWay;
 import com.test.commuterangeproblem.model.GraphEdge;
-import com.test.commuterangeproblem.repository.GraphEdgeRepository;
+import com.test.commuterangeproblem.repository.RouteRepository;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import java.util.TreeSet;
 public class SearchCitiesServiceDijkstraImpl implements SearchCitiesService {
 
     @Autowired
-    GraphEdgeRepository graphEdgeRepository;
+    RouteRepository routeRepository;
 
     public List<Integer> findReachableCityIds(int startCityId, double timeLimit) {
 
@@ -31,7 +31,7 @@ public class SearchCitiesServiceDijkstraImpl implements SearchCitiesService {
             int currentCityId = shortestCityWay.getCityId();
             passedCityIds.add(currentCityId);
 
-            for (GraphEdge graphEdge: graphEdgeRepository.findNeighbourCities(currentCityId, passedCityIds, timeLimit-shortestCityWay.getTimeDistance())) {
+            for (GraphEdge graphEdge: routeRepository.findNeighbourCities(currentCityId, passedCityIds, timeLimit-shortestCityWay.getTimeDistance())) {
                 int destinationCityId = graphEdge.getCityIdFrom() != currentCityId
                     ? graphEdge.getCityIdFrom()
                     : graphEdge.getCityIdTo();
