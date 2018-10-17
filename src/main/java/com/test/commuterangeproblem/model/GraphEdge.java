@@ -18,6 +18,6 @@ public class GraphEdge {
     @GeneratedValue
     private Integer id;
     private int cityIdFrom;
-    int cityIdTo;
-    double timeDistance;
+    private int cityIdTo;
+    private double timeDistance;
 }

@@ -1,6 +1,6 @@
 package com.test.commuterangeproblem.service.searchcities;
 
-import com.test.commuterangeproblem.model.CityWay;
+import com.test.commuterangeproblem.model.GraphNode;
 import com.test.commuterangeproblem.model.GraphEdge;
 import com.test.commuterangeproblem.repository.RouteRepository;
 import lombok.val;
@@ -20,32 +20,32 @@ public class SearchCitiesServiceDijkstraImpl implements SearchCitiesService {
     public List<Integer> findReachableCityIds(int startCityId, double timeLimit) {
 
         final List<Integer> reachableCityIds = new LinkedList<>();
-        final TreeSet<CityWay> heap = new TreeSet<>();
+        final TreeSet<GraphNode> heap = new TreeSet<>();
         final List<Integer> passedCityIds = new LinkedList<>();
 
         reachableCityIds.add(startCityId);
-        heap.add(new CityWay(startCityId, 0));
+        heap.add(new GraphNode(startCityId, 0));
 
         while (!heap.isEmpty()) {
             val shortestCityWay = heap.pollFirst();
             int currentCityId = shortestCityWay.getCityId();
             passedCityIds.add(currentCityId);
 
-            for (GraphEdge graphEdge: routeRepository.findNeighbourCities(currentCityId, passedCityIds, timeLimit-shortestCityWay.getTimeDistance())) {
+            for (GraphEdge graphEdge : routeRepository.findRoutesToNeighbourCities(currentCityId, passedCityIds, timeLimit-shortestCityWay.getTimeDistance())) {
                 int destinationCityId = graphEdge.getCityIdFrom() != currentCityId
                     ? graphEdge.getCityIdFrom()
                     : graphEdge.getCityIdTo();
 
                 double newTimeDist = shortestCityWay.getTimeDistance() + graphEdge.getTimeDistance();
 
-                if (heap.stream().noneMatch(cityWay -> cityWay.getCityId() == destinationCityId)) {
-                    heap.add(new CityWay(destinationCityId, newTimeDist));
+                if (heap.stream().noneMatch(graphNode -> graphNode.getCityId() == destinationCityId)) {
+                    heap.add(new GraphNode(destinationCityId, newTimeDist));
                     reachableCityIds.add(destinationCityId);
                 } else {
-                    CityWay p = heap.stream().filter(c -> c.getCityId() == destinationCityId).findFirst().get();
+                    GraphNode p = heap.stream().filter(c -> c.getCityId() == destinationCityId).findFirst().get();
                     if (newTimeDist < p.getTimeDistance()) {
                         heap.remove(p);
-                        heap.add(new CityWay(p.getCityId(), newTimeDist));
+                        heap.add(new GraphNode(p.getCityId(), newTimeDist));
                     }
                 }
             }

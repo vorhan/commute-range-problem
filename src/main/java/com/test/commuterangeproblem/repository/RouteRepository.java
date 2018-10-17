@@ -11,6 +11,6 @@ import java.util.Set;
 public interface RouteRepository extends JpaRepository<GraphEdge, Integer> {
 
     @Query("select a from GraphEdge a where ((a.cityIdFrom= :cityId AND a.cityIdTo NOT IN :passedCityIds) OR (a.cityIdTo= :cityId AND a.cityIdFrom NOT IN :passedCityIds)) AND a.timeDistance<= :timeLimit")
-    public Set<GraphEdge> findNeighbourCities(@Param("cityId") Integer cityId, @Param("passedCityIds") List<Integer> passedCityIds, @Param("timeLimit") double timeLimit);
+    public Set<GraphEdge> findRoutesToNeighbourCities(@Param("cityId") Integer cityId, @Param("passedCityIds") List<Integer> passedCityIds, @Param("timeLimit") double timeLimit);
 
 }

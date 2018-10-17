@@ -10,13 +10,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode
 @NoArgsConstructor
-public class CityWay implements Comparable<CityWay> {
+public class GraphNode implements Comparable<GraphNode> {
 
     private int cityId;
     private double timeDistance;
 
     @Override
-    public int compareTo(CityWay p) {
+    public int compareTo(GraphNode p) {
         return timeDistance < p.timeDistance
             ? -1
             : timeDistance == p.timeDistance
